@@ -1,0 +1,19 @@
+---
+- name: Copy local public SSH key as authorized key on remote RPi.
+  authorized_key:
+    user: pi
+    state: present
+    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+
+- name: Secure RPi by disabling password login.
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: "^ChallengeResponseAuthentication", line: "ChallengeResponseAuthentication no"}
+    - { regexp: "^[#]?PasswordAuthentication", line: "PasswordAuthentication no"}
+    - { regexp: "^UsePAM", line: "UsePAM no"}
+
+- name: Restart SSH server to reload new configuration.
+  command: service ssh restart

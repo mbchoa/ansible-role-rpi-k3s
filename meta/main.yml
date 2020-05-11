@@ -1,0 +1,23 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: Michael-Bryant Choa
+  description: k3s for Raspberry Pi.
+  company:
+
+  license: license (GPLv2, CC-BY, etc)
+
+  min_ansible_version: 2.4
+
+  platforms:
+  - name: Debian
+    versions:
+    - stretch
+    - buster
+
+  galaxy_tags:
+    - web
+    - system
+    - kubernetes
+    - server
