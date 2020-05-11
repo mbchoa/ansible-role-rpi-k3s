@@ -3,6 +3,14 @@ Ansible Role: rpi-k3s
 
 An Ansible role that provisions a set of Raspberry Pis as a k3s cluster.
 
+TODOs
+------
+This is still a work in progress. The following tasks still need to be implemented.
+
+- [ ] Install k3s master service on master node
+- [ ] Install k3s agent service on child nodes
+- [ ] Cleanup task to remove k3s services from master and child nodes
+
 Requirements
 ------------
 
