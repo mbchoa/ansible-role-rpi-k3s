@@ -17,3 +17,34 @@
 
 - name: Restart SSH server to reload new configuration.
   command: service ssh restart
+
+- name: Install k3s on master node.
+  shell:
+    cmd: >
+      curl -sfL https://get.k3s.io |
+      K3S_KUBECONFIG_MODE="644"
+      sh -
+    creates: /etc/rancher/k3s/k3s.yaml
+  when: inventory_hostname in groups['master']
+
+- name: Read node-token from master.
+  slurp:
+    src: /var/lib/rancher/k3s/server/node-token
+  register: node_token
+  when: inventory_hostname in groups['master']
+
+- name: Store Master node-token.
+  set_fact:
+   token: "{{ node_token.content | b64decode | regex_replace('\n', '') }}"
+  when: inventory_hostname in groups['master']
+
+- name: Install k3s on agent node.
+  shell:
+    cmd: >
+      curl -sfL https://get.k3s.io |
+      K3S_URL=https://{{ groups['master'][0] }}:6443
+      K3S_TOKEN={{ hostvars[groups['master'][0]]['token'] }}
+      K3S_KUBECONFIG_MODE="644"
+      sh -
+    creates: /etc/rancher/k3s/k3s.yaml
+  when: inventory_hostname in groups['nodes']
