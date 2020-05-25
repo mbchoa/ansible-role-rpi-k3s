@@ -52,6 +52,17 @@ If this is not the desired behavior, I recommend reverting the changes made to t
     [cluster:vars]
     ansible_user=pi
 
+Accessing Cluster
+-----------------
+
+To access the cluster from a remote machine, you will need to copy the kubeconfig file from the k3s master to your remote machine by running the following command
+
+```bash
+scp pi@master-ip:~/.kube/config ~/.kube/config
+```
+
+This will configure `kubectl` to direct commands to the k3s cluster on the Raspberry Pi.
+
 License
 -------
 
