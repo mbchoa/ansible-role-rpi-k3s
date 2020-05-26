@@ -6,7 +6,7 @@ galaxy_info:
   description: k3s for Raspberry Pi.
   company:
 
-  license: license (GPLv2, CC-BY, etc)
+  license: MIT
 
   min_ansible_version: 2.4
 

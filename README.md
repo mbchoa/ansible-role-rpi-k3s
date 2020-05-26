@@ -3,14 +3,6 @@ Ansible Role: rpi-k3s
 
 An Ansible role that provisions a set of Raspberry Pis as a k3s cluster.
 
-TODOs
-------
-This is still a work in progress. The following tasks still need to be implemented.
-
-- [x] Install k3s master service on master node ([a050964](https://github.com/mbchoa/ansible-role-rpi-k3s/commit/a050964bb931d32c56c3c55ced21ab276342b85b#diff-2444ad0870f91f17ca6c2a5e96b26823R21-R28))
-- [x] Install k3s agent service on child nodes ([a050964](https://github.com/mbchoa/ansible-role-rpi-k3s/commit/a050964bb931d32c56c3c55ced21ab276342b85b#diff-2444ad0870f91f17ca6c2a5e96b26823R41-R50))
-- [ ] Cleanup task to remove k3s services from master and child nodes
-
 Requirements
 ------------
 
@@ -27,14 +19,12 @@ Example Playbook
 
 First time setup, you'll need to run the playbook with the `-k` flag to enter the Raspberry Pi passsword (raspberry).
 
-Note: Keep in mind that once the role has been executed, all Raspberry Pis will effectively be locked down and inaccessible via SSH except for the machine that ran the playbook. This is done as a security measure per recommendation from the official raspberrypi.org [documentation](https://www.raspberrypi.org/documentation/configuration/security.md).
-
-If this is not the desired behavior, I recommend reverting the changes made to the `/etc/ssh/sshd_config` file. In the future, I'm hoping this can be an opt-in feature to give users the freedom to choose the level of security of their Raspberry Pis.
-
 #### playbook.yml
     - hosts: cluster
-      roles:
-         - { role: mbchoa.rpi-k3s }
+      become: true
+      tasks:
+        - include_role:
+            name: mbchoa.rpi-k3s
 
 #### inventory
     [master]
@@ -62,6 +52,22 @@ scp pi@master-ip:~/.kube/config ~/.kube/config
 ```
 
 This will configure `kubectl` to direct commands to the k3s cluster on the Raspberry Pi.
+
+Securing Raspberry Pi
+---------------------
+
+The role includes a `secure.yml` task which is an opt-in task that can be included in the setup of the Raspberry Pis to disable password login access once your machine's public SSH key has been copied over to each Raspberry Pi.
+
+This is taken from the official Raspberry Pi ["Securing your Raspberry Pi"](https://www.raspberrypi.org/documentation/configuration/security.md) article.
+
+#### playbook.yml
+    - hosts: cluster
+      become: true
+      tasks:
+        - include_role:
+            name: mbchoa.rpi-k3s
+          vars:
+            secure_raspberry_pis: true
 
 License
 -------
