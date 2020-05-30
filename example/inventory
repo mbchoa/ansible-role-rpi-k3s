@@ -1,0 +1,14 @@
+[master]
+192.168.86.10
+
+[nodes]
+192.168.86.11
+192.168.86.12
+192.168.86.13
+
+[cluster:children]
+master
+nodes
+
+[cluster:vars]
+ansible_user=pi

@@ -1,0 +1,12 @@
+---
+- hosts: master
+  tasks:
+    - name: Uninstall k3s from master node.
+      shell:
+        cmd: /usr/local/bin/k3s-uninstall.sh
+
+- hosts: nodes
+  tasks:
+    - name: Uninstall k3s from agent nodes.
+      shell:
+        cmd: /usr/local/bin/k3s-agent-uninstall.sh

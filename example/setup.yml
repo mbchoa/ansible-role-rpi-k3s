@@ -1,0 +1,10 @@
+---
+- hosts: cluster
+  become: true
+
+  vars:
+    secure_raspberry_pis: true
+
+  roles:
+    - geerlingguy.git
+    - mbchoa.rpi-k3s
