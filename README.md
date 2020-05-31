@@ -6,6 +6,7 @@ An Ansible role that provisions a set of Raspberry Pis as a k3s cluster.
 Requirements
 ------------
 
+* Clone repo to your `~/.ansible/roles` folder
 * Raspberry Pis should have freshly installed Raspbian OS
 * Ideally, the RPis should have static IP addresses assigned to them
 
@@ -17,9 +18,9 @@ None.
 Example Playbook
 ----------------
 
-First time setup, you'll need to run the playbook with the `-k` flag to enter the Raspberry Pi passsword (raspberry).
+First time setup, you'll need to run the playbook with the `-k` flag to enter the Raspberry Pi passsword (raspberry). You can utilize the playbooks contained in the [example](example) directory to setup your Raspberry Pi cluster as a starting point. The repository should be located in the `~/.ansible/roles` folder.
 
-#### playbook.yml
+#### setup.yml
     - hosts: cluster
       become: true
       tasks:
@@ -45,13 +46,13 @@ First time setup, you'll need to run the playbook with the `-k` flag to enter th
 Accessing Cluster
 -----------------
 
-To access the cluster from a remote machine, you will need to copy the kubeconfig file from the k3s master to your remote machine by running the following command
+To access the cluster from a remote machine, you will need to copy the kubeconfig file from the k3s master to your remote machine by running the following command:
 
 ```bash
 scp pi@master-ip:~/.kube/config ~/.kube/config
 ```
 
-This will configure `kubectl` to direct commands to the k3s cluster on the Raspberry Pi.
+This will configure `kubectl` to direct commands to the k3s master on the Raspberry Pi.
 
 Securing Raspberry Pi
 ---------------------

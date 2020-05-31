@@ -8,7 +8,7 @@
     cmd: >
       curl -sfL https://get.k3s.io |
       K3S_KUBECONFIG_MODE="644"
-      sh -
+      sh -s -
     creates: /etc/rancher/k3s/k3s.yaml
   when: inventory_hostname in groups['master']
 
@@ -18,9 +18,32 @@
   register: node_token
   when: inventory_hostname in groups['master']
 
-- name: Store Master node-token.
+- name: Store master node-token.
   set_fact:
    token: "{{ node_token.content | b64decode | regex_replace('\n', '') }}"
+  when: inventory_hostname in groups['master']
+
+- name: Create directory .kube.
+  file:
+    path: ~{{ ansible_user }}/.kube
+    state: directory
+    owner: "{{ ansible_user }}"
+  when: inventory_hostname in groups['master']
+
+- name: Copy config file to user home directory.
+  copy:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: ~{{ ansible_user }}/.kube/config
+    remote_src: yes
+    owner: "{{ ansible_user }}"
+  when: inventory_hostname in groups['master']
+
+- name: Replace cluster server address from localhost to k3s master IP.
+  command: >-
+    k3s kubectl config set-cluster default
+      --server=https://{{ groups['master'][0] }}:6443
+      --kubeconfig ~{{ ansible_user }}/.kube/config
+  changed_when: true
   when: inventory_hostname in groups['master']
 
 - name: Install k3s on agent node.
@@ -30,6 +53,6 @@
       K3S_URL=https://{{ groups['master'][0] }}:6443
       K3S_TOKEN={{ hostvars[groups['master'][0]]['token'] }}
       K3S_KUBECONFIG_MODE="644"
-      sh -
+      sh -s -
     creates: /etc/rancher/k3s/k3s.yaml
   when: inventory_hostname in groups['nodes']
