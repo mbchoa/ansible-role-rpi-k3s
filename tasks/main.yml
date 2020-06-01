@@ -7,6 +7,7 @@
   shell:
     cmd: >
       curl -sfL https://get.k3s.io |
+      INSTALL_K3S_EXEC="--no-deploy servicelb --no-deploy traefik"
       K3S_KUBECONFIG_MODE="644"
       sh -s -
     creates: /etc/rancher/k3s/k3s.yaml
@@ -56,3 +57,22 @@
       sh -s -
     creates: /etc/rancher/k3s/k3s.yaml
   when: inventory_hostname in groups['nodes']
+
+- name: Install Helm.
+  shell:
+    cmd: "{{ item }}"
+    creates: /usr/local/bin/helm
+  with_items:
+    - curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+    - chmod 700 /home/pi/get_helm.sh
+    - /home/pi/get_helm.sh
+    - rm /home/pi/get_helm.sh
+  when: inventory_hostname in groups['master']
+
+- name: Add official Helm charts repository.
+  shell:
+    cmd: "{{ item }}"
+  with_items:
+    - helm repo add stable https://kubernetes-charts.storage.googleapis.com
+    - helm repo update
+  when: inventory_hostname in groups['master']
