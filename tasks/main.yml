@@ -9,6 +9,7 @@
 
 - name: Install k3s on worker nodes and join them to cluster.
   import_tasks: workers.yml
+  when: "'workers' in group_names"
 
 - name: Install Helm on master node.
   import_tasks: helm.yml
