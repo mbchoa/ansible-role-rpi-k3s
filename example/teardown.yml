@@ -15,9 +15,9 @@
         - ~/.kube
         - /etc/rancher
 
-- hosts: nodes
+- hosts: workers
   tasks:
-    - name: Uninstall k3s from agent nodes.
+    - name: Uninstall k3s-agent from worker nodes.
       shell:
         cmd: /usr/local/bin/k3s-agent-uninstall.sh
         removes: /usr/local/bin/k3s-agent-uninstall.sh

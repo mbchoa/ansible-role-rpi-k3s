@@ -1,5 +1,5 @@
 ---
-- name: Install k3s on agent node.
+- name: Install k3s-agent on worker nodes.
   shell:
     cmd: >
       curl -sfL https://get.k3s.io |

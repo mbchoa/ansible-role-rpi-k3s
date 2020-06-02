@@ -31,14 +31,14 @@ First time setup, you'll need to run the playbook with the `-k` flag to enter th
     [master]
     192.168.0.1
 
-    [nodes]
+    [workers]
     192.168.0.2
     192.168.0.3
     192.168.0.4
 
     [cluster:children]
     master
-    nodes
+    workers
 
     [cluster:vars]
     ansible_user=pi

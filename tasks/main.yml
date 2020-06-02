@@ -8,8 +8,8 @@
   when: "'master' in group_names"
 
 - name: Install k3s on worker nodes and join them to cluster.
-  import_tasks: nodes.yml
-  
+  import_tasks: workers.yml
+
 - name: Install Helm on master node.
   import_tasks: helm.yml
   when: "'master' in group_names"
