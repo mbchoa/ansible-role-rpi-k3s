@@ -14,3 +14,7 @@
 - name: Install Helm on master node.
   import_tasks: helm.yml
   when: "'master' in group_names"
+
+- name: Install MetalLB loadbalancer.
+  import_tasks: metallb/main.yml
+  when: "'master' in group_names"

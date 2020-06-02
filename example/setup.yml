@@ -4,6 +4,7 @@
 
   vars:
     secure_raspberry_pis: true
+    lb_address_pool: 192.168.86.240-192.168.86.250
 
   roles:
     - mbchoa.rpi-k3s

@@ -1,7 +1,9 @@
 Ansible Role: rpi-k3s
 =========
 
-An Ansible role that provisions a set of Raspberry Pis as a k3s cluster.
+An Ansible role that provisions a set of Raspberry Pis as a k3s cluster. The k3s cluster, by default, comes with the [Traefik Ingress Controller](https://rancher.com/docs/k3s/latest/en/networking/#traefik-ingress-controller) as well as a basic [service load balancer](https://rancher.com/docs/k3s/latest/en/networking/#service-load-balancer).
+
+This role disables installation of the default ingress controller and load balancer in favor of using the [kubernetes/ingress-nginx](https://kubernetes.github.io/ingress-nginx/) ingress controller along with the [MetalLB](https://metallb.universe.tf/) load balancer.
 
 Requirements
 ------------
@@ -23,9 +25,13 @@ First time setup, you'll need to run the playbook with the `-k` flag to enter th
 #### setup.yml
     - hosts: cluster
       become: true
-      tasks:
-        - include_role:
-            name: mbchoa.rpi-k3s
+
+      vars:
+        # Update to use your own IP range
+        - lb_address_pool: 192.168.0.240-192.168.0.250
+
+      roles:
+        - mbchoa.rpi-k3s
 
 #### inventory
     [master]
@@ -64,11 +70,12 @@ This is taken from the official Raspberry Pi ["Securing your Raspberry Pi"](http
 #### playbook.yml
     - hosts: cluster
       become: true
-      tasks:
-        - include_role:
-            name: mbchoa.rpi-k3s
-          vars:
-            secure_raspberry_pis: true
+
+      vars:
+        secure_raspberry_pis: true
+
+      roles:
+        - mbchoa.rpi-k3s
 
 License
 -------
