@@ -1,0 +1,18 @@
+---
+- name: Install Helm.
+  shell:
+    cmd: "{{ item }}"
+    creates: /usr/local/bin/helm
+  with_items:
+    - curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+    - chmod 700 /home/pi/get_helm.sh
+    - /home/pi/get_helm.sh
+    - rm /home/pi/get_helm.sh
+
+- name: Add official Helm charts repository.
+  shell:
+    cmd: "{{ item }}"
+  with_items:
+    - helm repo add stable https://kubernetes-charts.storage.googleapis.com
+    - helm repo update
+    

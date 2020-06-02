@@ -1,0 +1,38 @@
+---
+- name: Install k3s on master node.
+  shell:
+    cmd: >
+      curl -sfL https://get.k3s.io |
+      INSTALL_K3S_EXEC="--no-deploy servicelb --no-deploy traefik"
+      K3S_KUBECONFIG_MODE="644"
+      sh -s -
+    creates: /etc/rancher/k3s/k3s.yaml
+
+- name: Read node-token from master.
+  slurp:
+    src: /var/lib/rancher/k3s/server/node-token
+  register: node_token
+
+- name: Store master node-token.
+  set_fact:
+   token: "{{ node_token.content | b64decode | regex_replace('\n', '') }}"
+
+- name: Create directory .kube.
+  file:
+    path: ~{{ ansible_user }}/.kube
+    state: directory
+    owner: "{{ ansible_user }}"
+
+- name: Copy config file to user home directory.
+  copy:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: ~{{ ansible_user }}/.kube/config
+    remote_src: yes
+    owner: "{{ ansible_user }}"
+
+- name: Replace cluster server address from localhost to k3s master IP.
+  command: >-
+    k3s kubectl config set-cluster default
+      --server=https://{{ groups['master'][0] }}:6443
+      --kubeconfig ~{{ ansible_user }}/.kube/config
+  changed_when: true

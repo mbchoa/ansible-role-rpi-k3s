@@ -1,0 +1,10 @@
+---
+- name: Install k3s on agent node.
+  shell:
+    cmd: >
+      curl -sfL https://get.k3s.io |
+      K3S_URL=https://{{ groups['master'][0] }}:6443
+      K3S_TOKEN={{ hostvars[groups['master'][0]]['token'] }}
+      K3S_KUBECONFIG_MODE="644"
+      sh -s -
+    creates: /etc/rancher/k3s/k3s.yaml
