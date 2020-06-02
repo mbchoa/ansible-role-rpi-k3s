@@ -6,7 +6,7 @@ An Ansible role that provisions a set of Raspberry Pis as a k3s cluster.
 Requirements
 ------------
 
-* Clone repo to your `~/.ansible/roles` folder
+* Clone repo to your `~/.ansible/roles` folder (the folder will need to be renamed `mbchoa.rpi-k3s`)
 * Raspberry Pis should have freshly installed Raspbian OS
 * Ideally, the RPis should have static IP addresses assigned to them
 
