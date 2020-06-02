@@ -15,6 +15,10 @@
   import_tasks: helm.yml
   when: "'master' in group_names"
 
-- name: Install MetalLB loadbalancer.
+- name: Install MetalLB load balancer.
   import_tasks: metallb/main.yml
+  when: "'master' in group_names"
+
+- name: Install nginx-ingress ingress controller.
+  import_tasks: nginx-ingress.yml
   when: "'master' in group_names"

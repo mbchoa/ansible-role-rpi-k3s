@@ -1,3 +1,6 @@
 ---
 # Determines if the secure.yml task will be ran on playbook execution
 secure_raspberry_pis: false
+
+# Home directory on Raspberry PI
+pi_home_dir: /home/pi

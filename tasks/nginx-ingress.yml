@@ -1,0 +1,8 @@
+---
+- name: Add ingress-nginx Helm chart repository.
+  shell:
+    cmd: helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+
+- name: Install ingress-nginx via Helm chart.
+  shell:
+    cmd: helm install ingress-nginx ingress-nginx/ingress-nginx --kubeconfig /home/pi/.kube/config

@@ -2,11 +2,11 @@
 - name: Copy Kubernetes manifest template to machine.
   template:
     src: manifest.j2
-    dest: ~/manifest.yaml
+    dest: "{{ pi_home_dir }}/manifest.yaml"
 
 - name: Install MetalLB.
   shell:
-    cmd: kubectl apply -f ~/manifest.yaml
+    cmd: "kubectl apply -f {{ pi_home_dir}}/manifest.yaml"
 
 - name: Add secret to encrypt communication between MetalLB speakers.
   shell:
